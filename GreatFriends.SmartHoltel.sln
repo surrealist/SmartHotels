@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreatFriends.SmartHoltel.APIS", "GreatFriends.SmartHoltel.APIS\GreatFriends.SmartHoltel.APIS.csproj", "{1812CF16-E3F4-4269-8BA3-029F5A7643EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreatFriends.SmartHoltel.Models", "GreatFriends.SmartHoltel.Models\GreatFriends.SmartHoltel.Models.csproj", "{F185DCD5-C929-4E8D-A9C0-0F91F2E7C7BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreatFriends.SmartHoltel.Services", "GreatFriends.SmartHoltel.Services\GreatFriends.SmartHoltel.Services.csproj", "{C2504F9F-0B3E-4E7E-9219-35DDBA5045B0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1812CF16-E3F4-4269-8BA3-029F5A7643EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1812CF16-E3F4-4269-8BA3-029F5A7643EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1812CF16-E3F4-4269-8BA3-029F5A7643EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1812CF16-E3F4-4269-8BA3-029F5A7643EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F185DCD5-C929-4E8D-A9C0-0F91F2E7C7BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F185DCD5-C929-4E8D-A9C0-0F91F2E7C7BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F185DCD5-C929-4E8D-A9C0-0F91F2E7C7BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F185DCD5-C929-4E8D-A9C0-0F91F2E7C7BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2504F9F-0B3E-4E7E-9219-35DDBA5045B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2504F9F-0B3E-4E7E-9219-35DDBA5045B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2504F9F-0B3E-4E7E-9219-35DDBA5045B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2504F9F-0B3E-4E7E-9219-35DDBA5045B0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C244F7B9-2B28-47C8-9EEB-70EFD3D47AD9}
+	EndGlobalSection
+EndGlobal
