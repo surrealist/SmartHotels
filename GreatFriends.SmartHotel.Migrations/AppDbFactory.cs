@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace GreatFriends.SmartHotel.Migrations
 {
-  public class DbFactory : IDesignTimeDbContextFactory<AppDb>
+  public class AppDbFactory : IDesignTimeDbContextFactory<AppDb>
   {
     public AppDb CreateDbContext(string[] args)
     {
