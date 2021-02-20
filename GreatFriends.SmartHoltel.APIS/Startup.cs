@@ -1,3 +1,4 @@
+using GreatFriends.SmartHoltel.Services;
 using GreatFriends.SmartHoltel.Services.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -42,6 +43,7 @@ namespace GreatFriends.SmartHoltel.APIS
               .UseLazyLoadingProxies();
       });
 
+      services.AddScoped<App>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

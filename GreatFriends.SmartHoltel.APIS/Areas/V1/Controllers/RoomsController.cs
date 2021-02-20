@@ -1,5 +1,6 @@
 ﻿using GreatFriends.SmartHoltel.APIS.Areas.V1.Models;
 using GreatFriends.SmartHoltel.Models;
+using GreatFriends.SmartHoltel.Services;
 using GreatFriends.SmartHoltel.Services.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,23 +16,17 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
   [ApiController]
   public class RoomsController : ControllerBase
   {
-    private readonly AppDb db;
+    private readonly App app;
 
-    public RoomsController(AppDb db)
+    public RoomsController(App app)
     {
-      this.db = db;
+      this.app = app;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<RoomResponse>>> GetAllAsync([FromHeader(Name = "X-RoomType")] string roomType = "")
     {
-      //var items = await db.Rooms.Include(r => r.Type)
-      //            .OrderBy(x => x.Id)
-      //            .Select(x => RoomResponse.FromModel(x))
-      //            .ToListAsync();
-      //return items;
-
-      var q = db.Rooms.Include(r => r.RoomType)
+      var q = app.Rooms.All().Include(r => r.RoomType)
                 .OrderBy(x => x.Id)
                 .Select(x => x);
 
@@ -54,7 +49,7 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
     [ProducesDefaultResponseType]
     public ActionResult<RoomResponse> GetById(int id)
     {
-      var item = db.Rooms.Find(id);
+      var item = app.Rooms.Find(id);
 
       if (item == null)
       {
@@ -70,7 +65,7 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
     [ProducesDefaultResponseType]
     public ActionResult<RoomResponse> Create(RoomRequest item)
     {
-      var itemRoomType = db.RoomTypes.Find(item.RoomTypeCode);
+      var itemRoomType = app.RoomTypes.Find(item.RoomTypeCode);
 
       if (itemRoomType == null)
       {
@@ -82,8 +77,8 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
 
       Room newRoom = item.ToModel();
 
-      db.Add(newRoom);
-      db.SaveChanges();
+      app.Rooms.Add(newRoom);
+      app.SaveChanges();
 
       return CreatedAtAction(nameof(GetById), new { id = newRoom.Id }, RoomResponse.FromModel(newRoom));
     }
@@ -101,7 +96,7 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
         return BadRequest("Invalid ID");
       }
 
-      var itemRoom = await db.Rooms.FindAsync(id);
+      var itemRoom = app.Rooms.Find(id);
 
       if (itemRoom == null)
       {
@@ -113,7 +108,7 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
       itemRoom.FloorNo = item.FloorNo;
       itemRoom.RoomTypeCode = item.RoomTypeCode;
 
-      await db.SaveChangesAsync();
+      await app.SaveChangesAsync();
 
       return NoContent();
     }
@@ -124,15 +119,15 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
     [ProducesDefaultResponseType]
     public async Task<ActionResult<RoomResponse>> DeleteAsync(int id)
     {
-      var item = await db.Rooms.FindAsync(id);
+      var item = app.Rooms.Find(id);
 
       if (item == null)
       {
         return NotFound(new ProblemDetails { Title = $"Room id {id} not found" });
       }
 
-      db.Remove(item);
-      await db.SaveChangesAsync();
+      app.Rooms.Remove(item);
+      await app.SaveChangesAsync();
 
       return RoomResponse.FromModel(item);
     }
