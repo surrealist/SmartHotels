@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreatFriends.SmartHoltel.Se
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreatFriends.SmartHotel.Migrations", "GreatFriends.SmartHotel.Migrations\GreatFriends.SmartHotel.Migrations.csproj", "{A7DFBF45-6A38-4D98-992D-312EF351ABEA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreatFriends.SmartHotel.Tests", "GreatFriends.SmartHotel.Tests\GreatFriends.SmartHotel.Tests.csproj", "{645ABD77-E081-4A1D-A99C-A9E67EE43E02}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{A7DFBF45-6A38-4D98-992D-312EF351ABEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7DFBF45-6A38-4D98-992D-312EF351ABEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7DFBF45-6A38-4D98-992D-312EF351ABEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{645ABD77-E081-4A1D-A99C-A9E67EE43E02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{645ABD77-E081-4A1D-A99C-A9E67EE43E02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{645ABD77-E081-4A1D-A99C-A9E67EE43E02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{645ABD77-E081-4A1D-A99C-A9E67EE43E02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
