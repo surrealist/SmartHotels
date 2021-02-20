@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace GreatFriends.SmartHoltel.Services
 {
@@ -10,6 +11,7 @@ namespace GreatFriends.SmartHoltel.Services
     IQueryable<T> Query(Expression<Func<T, bool>> predicate);
     IQueryable<T> All();
     T Find(params object[] keys);
+    ValueTask<T> FindAsync(params object[] keys);
 
     T Add(T item);
     T Update(T item);

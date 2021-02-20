@@ -9,6 +9,7 @@ namespace GreatFriends.SmartHoltel.Services
   public sealed class App
   {
     internal readonly AppDb db;
+    private Lazy<ReservationService> _reservationService;
 
     public App(AppDb db)
     {
@@ -16,12 +17,12 @@ namespace GreatFriends.SmartHoltel.Services
 
       Rooms = new RoomService(this);
       RoomTypes = new RoomTypeService(this);
-      Reservations = new ReservationService(this);
+      _reservationService = new Lazy<ReservationService>(() => new ReservationService(this));
     }
 
-    public RoomService Rooms { get; set; }
-    public RoomTypeService RoomTypes { get; set; }
-    public ReservationService Reservations { get; set; }
+    public RoomService Rooms { get; }
+    public RoomTypeService RoomTypes { get; }
+    public ReservationService Reservations => _reservationService.Value;
 
     public int SaveChanges() => db.SaveChanges();
     public Task<int> SaveChangesAsync() => db.SaveChangesAsync();

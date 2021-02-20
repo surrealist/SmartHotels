@@ -1,6 +1,7 @@
 ﻿
-using GreatFriends.SmartHoltel.APIS.Areas.V1.Models; 
+using GreatFriends.SmartHoltel.APIS.Areas.V1.Models;
 using GreatFriends.SmartHoltel.Models;
+using GreatFriends.SmartHoltel.Services;
 using GreatFriends.SmartHoltel.Services.Data;
 using GreatFriends.SmartHotel.APIS;
 using Microsoft.AspNetCore.Http;
@@ -17,17 +18,17 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
   [ApiController]
   public class ReservationsController : ControllerBase
   {
-    private readonly AppDb db;
+    private readonly App app;
 
-    public ReservationsController(AppDb appDb)
+    public ReservationsController(App app)
     {
-      this.db = appDb;
+      this.app = app;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ReservationResponse>>> GetAllAsync()
     {
-      var items = await db.Reservations.ToListAsync();
+      var items = await app.Reservations.All().ToListAsync();
 
       var output = items.ConvertAll(ReservationResponse.FromModel);
 
@@ -41,7 +42,7 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
     [ProducesDefaultResponseType]
     public async Task<ActionResult<ReservationResponse>> GetByIdAsync(int id)
     {
-      var item = await db.Reservations.FindAsync(id);
+      var item = await app.Reservations.FindAsync(id);
 
       if (item == null)
       {
@@ -58,40 +59,46 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
     [ProducesDefaultResponseType]
     public async Task<ActionResult<ReservationResponse>> CreateAsync(ReservationRequest item)
     {
-      item.CheckInDate = item.CheckInDate.Date;
-      item.CheckOutDate = item.CheckOutDate.Date;
+      Reservation model = item.ToModel();
+      Reservation reservation = app.Reservations.Create(model);
+      await app.SaveChangesAsync();
 
-      var roomItem = await db.Rooms.FindAsync(item.RoomId);
-
-      if (roomItem == null)
-      {
-        return NotFound(new ProblemDetails
-        {
-          Title = $"Room id {item.RoomId} not found"
-        });
-      }
-
-      var hasOverlapped = db.Reservations.Where(q =>
-                    q.RoomId == item.RoomId
-                    && !q.IsCanceled
-                    && q.CheckInDate <= item.CheckInDate
-                    && q.CheckOutDate >= item.CheckInDate
-                  ).Any();
-
-      if (hasOverlapped)
-      {
-        return BadRequest(new ProblemDetails
-        {
-          Title = $"Reservation Duplicate"
-        });
-      }
-
-      var newItem = item.ToModel();
-      await db.AddAsync(newItem);
-      await db.SaveChangesAsync();
-
-      return CreatedAtAction(nameof(GetByIdAsync), new { id = item.Id }, ReservationResponse.FromModel(newItem));
+      return CreatedAtAction(nameof(GetByIdAsync), new { id = reservation.Id }, ReservationResponse.FromModel(reservation));
     }
+
+
+    //item.CheckInDate = item.CheckInDate.Date;
+    //item.CheckOutDate = item.CheckOutDate.Date;
+
+    //var roomItem = await app.Rooms.FindAsync(item.RoomId);
+
+    //if (roomItem == null)
+    //{
+    //  return NotFound(new ProblemDetails
+    //  {
+    //    Title = $"Room id {item.RoomId} not found"
+    //  });
+    //}
+
+    //var hasOverlapped = app.Reservations.Query(q =>
+    //              q.RoomId == item.RoomId
+    //              && !q.IsCanceled
+    //              && q.CheckInDate <= item.CheckInDate
+    //              && q.CheckOutDate >= item.CheckInDate
+    //            ).Any();
+
+    //if (hasOverlapped)
+    //{
+    //  return BadRequest(new ProblemDetails
+    //  {
+    //    Title = $"Reservation Duplicate"
+    //  });
+    //}
+
+    //var newItem = item.ToModel();
+    //app.Reservations.Add(newItem);
+    //await app.SaveChangesAsync();
+
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -105,14 +112,14 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
         return BadRequest("Invalid ID");
       }
 
-      var itemRoom = await db.Rooms.FindAsync(id);
+      var itemRoom = await app.Rooms.FindAsync(id);
 
       if (itemRoom == null)
       {
         return NotFound(new ProblemDetails() { Title = $"Room id : {id}  not found" });
       }
 
-      var items = await db.Reservations.Where(q =>
+      var items = await app.Reservations.Query(q =>
                      q.RoomId == item.RoomId &&
                      q.CheckInDate <= item.CheckInDate &&
                      q.CheckOutDate >= item.CheckInDate &&
@@ -129,7 +136,7 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
       }
 
 
-      var itemReservation = await db.Reservations.FindAsync(item.Id);
+      var itemReservation = await app.Reservations.FindAsync(item.Id);
 
       itemReservation.CheckInDate = item.CheckInDate.Date;
       itemReservation.CheckOutDate = item.CheckOutDate.Date;
@@ -138,7 +145,7 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
       itemReservation.Mobile = item.Mobile;
       itemReservation.RoomId = item.RoomId;
 
-      await db.SaveChangesAsync();
+      await app.SaveChangesAsync();
 
       return NoContent();
     }
@@ -157,14 +164,14 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
         return BadRequest("Invalid ID");
       }
 
-      var itemReservation = await db.Reservations.FindAsync(id);
+      var itemReservation = await app.Reservations.FindAsync(id);
       if (itemReservation == null)
       {
         return NotFound(new ProblemDetails { Title = $"Reservation id {id} not found" });
       }
 
       itemReservation.Cancel(item.CanceledDate, item.CancelReason);
-      db.SaveChanges();
+      await app.SaveChangesAsync();
 
       return ReservationResponse.FromModel(itemReservation);
     }
