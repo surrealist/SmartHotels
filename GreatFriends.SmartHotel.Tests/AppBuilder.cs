@@ -29,15 +29,16 @@ namespace GreatFriends.SmartHotel.Tests
         Id = 501,
         FloorNo = 5,
         AreaSquareMeters = 30,
-        RoomTypeCode = "S1"
-      }; //, RoomType = roomTypeS1 };
+        RoomTypeCode = "S1",
+        RoomType = roomTypeS1
+      };
       app.RoomTypes.Add(roomTypeS1);
       app.Rooms.Add(room501);
       app.SaveChanges();
 
       return this;
     }
-
+    
     public App Build() => app;
   }
 }
