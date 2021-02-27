@@ -19,35 +19,36 @@ namespace GreatFriends.SmartHotel.Tests
       [Fact]
       public void Simple()
       {
+        DateTime now = new DateTime(2021, 2, 1, 10, 30, 5);
         var app = new AppBuilder()
                   .WithSingleRoom()
-                  .Build();
+                  .SetNow(now)
+                  .Build(); 
 
         var room501 = app.Rooms.Find(501);
         var dt1 = new DateTime(2021, 2, 20);
         var dt2 = new DateTime(2021, 2, 25); // 5 nights
-        var model = new Reservation
-        {
-          CustomerName = "Alice",
-          Mobile = "999",
-          Email = "alice@c.com",
-          RoomId = room501.Id,
-          Room = room501,
-          CheckInDate = dt1,
-          CheckOutDate = dt2,
-        };
+        var alice = CreateReservation("Alice", room501, dt1, dt2);
 
         // act
-        var r = app.Reservations.Create(model);
+        var r = app.Reservations.Create(alice);
 
         // assert
         Assert.NotNull(r);
-        Assert.NotSame(model, r);
+        Assert.NotSame(alice, r);
         Assert.Equal(501, r.RoomId);
         Assert.Same(room501, r.Room);
         Assert.Equal(dt1, r.CheckInDate);
         Assert.Equal(dt2, r.CheckOutDate);
+        Assert.Equal(now, r.CreatedDate);
         Assert.Equal(1, app.Reservations.All().Count());
+      }
+
+
+      [Fact(Skip = "Homework")]
+      public void MakeReservationInThePast_InvalidDate()
+      {
+        //
       }
 
       public static IEnumerable<object[]> InvalidDateData(string startDate, int days)
@@ -63,8 +64,6 @@ namespace GreatFriends.SmartHotel.Tests
 
       [Theory]
       [MemberData(nameof(InvalidDateData), "2021-03-20", 5)]
-      //[InlineData("2021-03-20", "2021-03-20")]
-      //[InlineData("2021-03-20", "2021-03-19")]
       public void InvalidDate_Error(string checkIn, string checkOut)
       {
         var app = new AppBuilder()
@@ -85,17 +84,25 @@ namespace GreatFriends.SmartHotel.Tests
           CheckOutDate = checkOutDate,
         };
 
-        var ex = Assert.ThrowsAny<Exception>(() =>
+        var ex = Assert.Throws<ReservationException>(() =>
         {
           var r = app.Reservations.Create(model);
         });
 
         // assert 
-        Assert.Equal("Invalid checkin or checkout date", ex.Message);
+        Assert.Equal("Invalid checkin or checkout date", ex.Reason);
       }
 
-      [Fact]
-      public void OverlappingCase1()
+      [Theory]
+      [InlineData("2021-02-10", "2021-02-21")]
+      [InlineData("2021-02-10", "2021-02-22")]
+      [InlineData("2021-02-10", "2021-02-25")]
+      [InlineData("2021-02-10", "2021-02-26")]
+      [InlineData("2021-02-10", "2021-02-27")]
+      [InlineData("2021-02-20", "2021-02-22")]
+      [InlineData("2021-02-21", "2021-02-22")]
+      [InlineData("2021-02-22", "2021-02-27")]
+      public void OverlappingCase1(string checkIn, string checkOut)
       {
         var app = new AppBuilder()
                   .WithSingleRoom()
@@ -107,8 +114,8 @@ namespace GreatFriends.SmartHotel.Tests
         var alice = CreateReservation("Alice", room501, dt1, dt2);
         var r1 = app.Reservations.Create(alice);
 
-        var dt3 = new DateTime(2021, 2, 10);
-        var dt4 = new DateTime(2021, 2, 21);
+        var dt3 = DateTime.Parse(checkIn);
+        var dt4 = DateTime.Parse(checkOut);
         var bob = CreateReservation("Bob", room501, dt3, dt4);
 
         // act

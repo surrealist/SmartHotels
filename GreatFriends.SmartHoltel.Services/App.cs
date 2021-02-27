@@ -1,4 +1,5 @@
 ﻿using GreatFriends.SmartHoltel.Services.Data;
+using GreatFriends.SmartHoltel.Services.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -26,5 +27,16 @@ namespace GreatFriends.SmartHoltel.Services
 
     public int SaveChanges() => db.SaveChanges();
     public Task<int> SaveChangesAsync() => db.SaveChangesAsync();
+
+    public Func<DateTime> Now { get; private set; } = () => DateTime.Now;
+    public void SetNow(DateTime now) => Now = () => now;
+    public void ResetNow() => Now = () => DateTime.Now;
+
+    public void Throws(AppException ex)
+    {
+      ex.UserName = "xx";
+
+      throw ex;
+    }
   }
 }

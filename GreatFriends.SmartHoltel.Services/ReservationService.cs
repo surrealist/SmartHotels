@@ -1,4 +1,5 @@
 ﻿using GreatFriends.SmartHoltel.Models;
+using GreatFriends.SmartHoltel.Services.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace GreatFriends.SmartHoltel.Services
     {
       if (model.CheckOutDate <= model.CheckInDate)
       {
-        throw new Exception("Invalid checkin or checkout date");
+        app.Throws(new ReservationException(model.CustomerName, model.RoomId, "Invalid checkin or checkout date"));
       }
 
       var activeReservations = app.Reservations.Query(q =>
@@ -40,7 +41,7 @@ namespace GreatFriends.SmartHoltel.Services
 
       if (hasOverlapped1 || hasOverlapped2 || hasOverlapped3)
       {
-        throw new Exception("Overlapping Reservations");
+        app.Throws(new ReservationException(model.CustomerName, model.RoomId, "Overlapping"));
       }
 
       var r = new Reservation
@@ -50,8 +51,12 @@ namespace GreatFriends.SmartHoltel.Services
         CheckOutDate = model.CheckOutDate,
         Mobile = model.Mobile,
         Email = model.Email,
+        Room = model.Room,
         RoomId = model.RoomId,
-        Room = model.Room
+        CreatedDate = app.Now(),
+        IsCanceled = false,
+        CanceledDate = null,
+        CancelReason = null,
       };
 
       Add(r);

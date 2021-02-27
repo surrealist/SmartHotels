@@ -21,6 +21,12 @@ namespace GreatFriends.SmartHotel.Tests
       app = new App(db);
     }
 
+    public AppBuilder SetNow(DateTime now)
+    {
+      app.SetNow(now);
+      return this;
+    }
+
     public AppBuilder WithSingleRoom()
     {
       var roomTypeS1 = new RoomType { Code = "S1", Name = "Single bed", Price = 1_000m };

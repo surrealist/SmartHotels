@@ -3,6 +3,11 @@
   public class ReservationException : AppException
   {
     public ReservationException(string customerName, int roomId, string reason)
+      : this("guest", customerName, roomId, reason)
+    {
+      // 
+    }
+    public ReservationException(string userName, string customerName, int roomId, string reason)
     {
       CustomerName = customerName;
       RoomId = roomId;
