@@ -15,6 +15,12 @@ namespace GreatFriends.SmartHoltel.Services
 
     public Reservation Create(Reservation model)
     {
+      if (model.CheckInDate < app.Today())
+      {
+        app.Throws(new ReservationException(model.CustomerName, model.RoomId,
+          "Cannot make a reservation in the past"));
+      }
+
       if (model.CheckOutDate <= model.CheckInDate)
       {
         app.Throws(new ReservationException(model.CustomerName, model.RoomId, "Invalid checkin or checkout date"));

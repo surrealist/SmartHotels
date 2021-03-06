@@ -1,9 +1,12 @@
+using GreatFriends.SmartHoltel.APIS.Middlewares;
 using GreatFriends.SmartHoltel.Services;
 using GreatFriends.SmartHoltel.Services.Data;
+using GreatFriends.SmartHotels.APIs.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -46,6 +49,25 @@ namespace GreatFriends.SmartHoltel.APIS
               .UseLazyLoadingProxies();
       });
 
+      // Identity Core
+      services.AddDbContext<ApplicationDbContext>(options =>
+          options.UseSqlServer(
+              Configuration.GetConnectionString("DefaultConnection")));
+
+      services.AddIdentity<IdentityUser, IdentityRole>(options =>
+      {
+        options.Password.RequireDigit = true;
+        options.Password.RequiredLength = 6;
+        options.Password.RequireLowercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+
+        options.User.RequireUniqueEmail = true;
+        options.SignIn.RequireConfirmedAccount = true;
+      })
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
+
       services.AddAuthentication(config =>
         {
           config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -54,9 +76,13 @@ namespace GreatFriends.SmartHoltel.APIS
         .AddJwtBearer(options =>
         options.TokenValidationParameters = new TokenValidationParameters
         {
-          ValidateIssuer = false,
-          ValidateAudience = false,
+          ValidateIssuer = true,
+          ValidateAudience = true,
+          ValidIssuer = Configuration["jwt:issuer"],
+          ValidAudience = Configuration["jwt:audience"],
+
           ValidateLifetime = true,
+
           ValidateIssuerSigningKey = true,
           IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(Configuration["jwt:key"])),
@@ -78,14 +104,14 @@ namespace GreatFriends.SmartHoltel.APIS
         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GreatFriends.SmartHoltel.APIS v1"));
       }
 
-      // db.Database.EnsureCreated();
-
       app.UseHttpsRedirection();
 
       app.UseRouting();
 
       app.UseAuthentication();
       app.UseAuthorization();
+
+      app.UseAuth();
 
       app.UseEndpoints(endpoints =>
       {

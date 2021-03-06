@@ -21,7 +21,7 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
 
     public RoomsController(App app)
     {
-      this.app = app;
+      this.app = app; 
     }
     
     [HttpGet]
@@ -43,7 +43,6 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
       return output;
     }
 
-
     [Authorize]
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -51,6 +50,11 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
     [ProducesDefaultResponseType]
     public ActionResult<RoomResponse> GetById(int id)
     {
+      //if (!app.IsAuthenticated)
+      //{
+      //  return Unauthorized("555");
+      //}
+
       var item = app.Rooms.Find(id);
 
       if (item == null)

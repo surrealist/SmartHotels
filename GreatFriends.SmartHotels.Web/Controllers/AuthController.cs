@@ -61,8 +61,8 @@ namespace GreatFriends.SmartHoltel.Web.Controllers
       var expiration = DateTime.Now.AddDays(10);
 
       JwtSecurityToken token = new JwtSecurityToken(
-        issuer: null, 
-        audience: null, 
+        issuer: config["jwt:issuer"], 
+        audience: config["jwt:audience"],  
         claims: claims, 
         expires: expiration, 
         signingCredentials: creds);

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Xunit;
+using Should;
 
 namespace GreatFriends.SmartHotel.Tests
 {
@@ -17,7 +18,7 @@ namespace GreatFriends.SmartHotel.Tests
     {
 
       [Fact]
-      public void Simple()
+      public void SimpleCase()
       {
         DateTime now = new DateTime(2021, 2, 1, 10, 30, 5);
         var app = new AppBuilder()
@@ -44,11 +45,26 @@ namespace GreatFriends.SmartHotel.Tests
         Assert.Equal(1, app.Reservations.All().Count());
       }
 
-
-      [Fact(Skip = "Homework")]
-      public void MakeReservationInThePast_InvalidDate()
+      [Fact]
+      public void MakeReservationInThePast_ThrowsEx()
       {
-        //
+        var app = new AppBuilder()
+                  .WithSingleRoom()
+                  .SetNow(new DateTime(2021, 2, 16)) // 16 Feb
+                  .Build();
+
+        var room501 = app.Rooms.Find(501);
+        var dt1 = new DateTime(2021, 2, 14);
+        var dt2 = new DateTime(2021, 2, 15); 
+        var input = CreateReservation("Alice", room501, dt1, dt2);
+
+        var ex = Assert.Throws<ReservationException>(() =>
+        {
+          var reservation = app.Reservations.Create(input);
+        });
+
+        ex.RoomId.ShouldEqual(501);
+        ex.Reason.ShouldEqual("Cannot make a reservation in the past");
       }
 
       public static IEnumerable<object[]> InvalidDateData(string startDate, int days)
