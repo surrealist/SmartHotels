@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace GreatFriends.SmartHoltel.APIS.Middlewares
@@ -27,7 +28,11 @@ namespace GreatFriends.SmartHoltel.APIS.Middlewares
       if (httpContext.User.Identity.IsAuthenticated)
       {
         var aspnetUser = await userManager.FindByNameAsync(httpContext.User.Identity.Name);
-        app.SetCurrentUser(new Guid(aspnetUser.Id), aspnetUser.UserName);
+
+        var roles = httpContext.User
+                    .FindAll(ClaimTypes.Role)
+                    .Select(x => x.Value).ToArray();
+        app.SetCurrentUser(new Guid(aspnetUser.Id), aspnetUser.UserName, roles);
       }
 
       await _next(httpContext);

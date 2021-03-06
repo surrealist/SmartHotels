@@ -24,7 +24,8 @@ namespace GreatFriends.SmartHotel.Tests
         var app = new AppBuilder()
                   .WithSingleRoom()
                   .SetNow(now)
-                  .Build(); 
+                  .SignedInAsUser()
+                  .Build();
 
         var room501 = app.Rooms.Find(501);
         var dt1 = new DateTime(2021, 2, 20);
@@ -51,11 +52,12 @@ namespace GreatFriends.SmartHotel.Tests
         var app = new AppBuilder()
                   .WithSingleRoom()
                   .SetNow(new DateTime(2021, 2, 16)) // 16 Feb
+                  .SignedInAsUser()
                   .Build();
 
         var room501 = app.Rooms.Find(501);
         var dt1 = new DateTime(2021, 2, 14);
-        var dt2 = new DateTime(2021, 2, 15); 
+        var dt2 = new DateTime(2021, 2, 15);
         var input = CreateReservation("Alice", room501, dt1, dt2);
 
         var ex = Assert.Throws<ReservationException>(() =>
@@ -84,6 +86,7 @@ namespace GreatFriends.SmartHotel.Tests
       {
         var app = new AppBuilder()
                 .WithSingleRoom()
+                .SignedInAsUser()
                 .Build();
 
         var room501 = app.Rooms.Find(501);
@@ -122,6 +125,8 @@ namespace GreatFriends.SmartHotel.Tests
       {
         var app = new AppBuilder()
                   .WithSingleRoom()
+                  .SetNow(new DateTime(2021, 2, 1))
+                  .SignedInAsUser()
                   .Build();
 
         var room501 = app.Rooms.Find(501);
@@ -143,6 +148,49 @@ namespace GreatFriends.SmartHotel.Tests
         Assert.Equal("Overlapping", ex.Reason);
         Assert.Equal("Bob", ex.CustomerName);
         Assert.Equal(501, ex.RoomId);
+      }
+
+      [Fact]
+      public void Anonymous_CannotMakeReservation()
+      {
+        DateTime now = new DateTime(2021, 2, 1, 10, 30, 5);
+        var app = new AppBuilder()
+                  .WithSingleRoom()
+                  .SetNow(now)
+                  .NotSignedIn()
+                  .Build();
+
+        var room501 = app.Rooms.Find(501);
+        var dt1 = new DateTime(2021, 2, 20);
+        var dt2 = new DateTime(2021, 2, 25); // 5 nights
+        var alice = CreateReservation("Alice", room501, dt1, dt2);
+
+        Assert.Throws<UnauthorizedException>(() =>
+        {
+          var r = app.Reservations.Create(alice);
+        });
+
+      }
+
+      [Fact]
+      public void User_CanMakeReservation()
+      {
+        DateTime now = new DateTime(2021, 2, 1, 10, 30, 5);
+        var app = new AppBuilder()
+                  .WithSingleRoom()
+                  .SetNow(now)
+                  .SignedInAsUser()
+                  .Build();
+
+        var room501 = app.Rooms.Find(501);
+        var dt1 = new DateTime(2021, 2, 20);
+        var dt2 = new DateTime(2021, 2, 25); // 5 nights
+        var alice = CreateReservation("Alice", room501, dt1, dt2);
+
+        // act
+        var r = app.Reservations.Create(alice);
+
+        Assert.NotNull(r);
       }
 
       private Reservation CreateReservation(

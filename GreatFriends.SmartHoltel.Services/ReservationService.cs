@@ -15,6 +15,10 @@ namespace GreatFriends.SmartHoltel.Services
 
     public Reservation Create(Reservation model)
     {
+      if (!app.IsAuthenticated) {
+        app.Throws(new UnauthorizedException("Anonymous cannot make a reservation"));
+      }
+
       if (model.CheckInDate < app.Today())
       {
         app.Throws(new ReservationException(model.CustomerName, model.RoomId,

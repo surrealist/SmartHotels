@@ -26,6 +26,18 @@ namespace GreatFriends.SmartHotel.Tests
       app.SetNow(now);
       return this;
     }
+     
+    public AppBuilder SignedInAsUser()
+    {
+      app.SetCurrentUser(Guid.NewGuid(), "Alice", new[] { "user" });
+      return this;
+    }
+
+    public AppBuilder NotSignedIn()
+    {
+      app.ClearCurrentUser();
+      return this;
+    }
 
     public AppBuilder WithSingleRoom()
     {

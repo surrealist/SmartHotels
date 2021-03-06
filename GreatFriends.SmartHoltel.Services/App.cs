@@ -40,7 +40,7 @@ namespace GreatFriends.SmartHoltel.Services
     public void ResetNow() => Now = () => DateTime.Now;
     public DateTime Today() => Now().Date;
 
-    public void SetCurrentUser(Guid id, string username)
+    public void SetCurrentUser(Guid id, string username, IEnumerable<string> roles)
     {
       var user = Users.Find(id);
       if (user == null)
@@ -56,11 +56,18 @@ namespace GreatFriends.SmartHoltel.Services
         SaveChanges();
       }
 
+      user.Roles = roles;
       CurrentUser = user;
+    }
+
+    public void ClearCurrentUser()
+    {
+      CurrentUser = null;
     }
 
     public void Throws(AppException ex)
     {
+      ex.UserId = CurrentUser?.Id;
       ex.UserName = CurrentUser?.UserName;
 
       throw ex;
