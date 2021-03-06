@@ -2,6 +2,7 @@
 using GreatFriends.SmartHoltel.Models;
 using GreatFriends.SmartHoltel.Services;
 using GreatFriends.SmartHoltel.Services.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,9 +21,9 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
 
     public RoomsController(App app)
     {
-      this.app = app;
+      this.app = app; 
     }
-
+    
     [HttpGet]
     public async Task<ActionResult<IEnumerable<RoomResponse>>> GetAllAsync([FromHeader(Name = "X-RoomType")] string roomType = "")
     {
@@ -42,13 +43,18 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
       return output;
     }
 
-
+    [Authorize]
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesDefaultResponseType]
     public ActionResult<RoomResponse> GetById(int id)
     {
+      //if (!app.IsAuthenticated)
+      //{
+      //  return Unauthorized("555");
+      //}
+
       var item = app.Rooms.Find(id);
 
       if (item == null)

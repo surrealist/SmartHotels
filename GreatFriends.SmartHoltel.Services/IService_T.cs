@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -14,6 +15,7 @@ namespace GreatFriends.SmartHoltel.Services
     ValueTask<T> FindAsync(params object[] keys);
 
     T Add(T item);
+    ValueTask<EntityEntry<T>> AddAsync(T item);
     T Update(T item);
     T Remove(T item);
   }

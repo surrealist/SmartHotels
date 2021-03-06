@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
 {
   [Route("api/V1/[controller]")]
+  [Produces("application/json")]
   [ApiController]
   public class ReservationsController : ControllerBase
   {
@@ -64,41 +65,7 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
       await app.SaveChangesAsync();
 
       return CreatedAtAction(nameof(GetByIdAsync), new { id = reservation.Id }, ReservationResponse.FromModel(reservation));
-    }
-
-
-    //item.CheckInDate = item.CheckInDate.Date;
-    //item.CheckOutDate = item.CheckOutDate.Date;
-
-    //var roomItem = await app.Rooms.FindAsync(item.RoomId);
-
-    //if (roomItem == null)
-    //{
-    //  return NotFound(new ProblemDetails
-    //  {
-    //    Title = $"Room id {item.RoomId} not found"
-    //  });
-    //}
-
-    //var hasOverlapped = app.Reservations.Query(q =>
-    //              q.RoomId == item.RoomId
-    //              && !q.IsCanceled
-    //              && q.CheckInDate <= item.CheckInDate
-    //              && q.CheckOutDate >= item.CheckInDate
-    //            ).Any();
-
-    //if (hasOverlapped)
-    //{
-    //  return BadRequest(new ProblemDetails
-    //  {
-    //    Title = $"Reservation Duplicate"
-    //  });
-    //}
-
-    //var newItem = item.ToModel();
-    //app.Reservations.Add(newItem);
-    //await app.SaveChangesAsync();
-
+    } 
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

@@ -111,6 +111,27 @@ namespace GreatFriends.SmartHotel.Migrations.Migrations
                     b.ToTable("RoomTypes");
                 });
 
+            modelBuilder.Entity("GreatFriends.SmartHoltel.Models.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("GreatFriends.SmartHoltel.Models.Reservation", b =>
                 {
                     b.HasOne("GreatFriends.SmartHoltel.Models.Room", "Room")

@@ -1,4 +1,6 @@
 ﻿using GreatFriends.SmartHoltel.Models;
+using System;
+using System.Linq;
 
 namespace GreatFriends.SmartHoltel.Services
 {
@@ -7,6 +9,16 @@ namespace GreatFriends.SmartHoltel.Services
     public RoomService(App app) : base(app)
     {
       //
+    }
+
+    public override Room Add(Room item)
+    {
+      if (All().Any(x => x.Id == item.Id))
+      {
+        throw new Exception($"Duplicate room {item.Id}");
+      }
+
+      return base.Add(item);
     }
   }
 }

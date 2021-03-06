@@ -1,18 +1,24 @@
+using GreatFriends.SmartHoltel.APIS.Middlewares;
 using GreatFriends.SmartHoltel.Services;
 using GreatFriends.SmartHoltel.Services.Data;
+using GreatFriends.SmartHotels.APIs.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace GreatFriends.SmartHoltel.APIS
@@ -43,7 +49,49 @@ namespace GreatFriends.SmartHoltel.APIS
               .UseLazyLoadingProxies();
       });
 
+      // Identity Core
+      services.AddDbContext<ApplicationDbContext>(options =>
+          options.UseSqlServer(
+              Configuration.GetConnectionString("DefaultConnection")));
+
+      services.AddIdentity<IdentityUser, IdentityRole>(options =>
+      {
+        options.Password.RequireDigit = true;
+        options.Password.RequiredLength = 6;
+        options.Password.RequireLowercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+
+        options.User.RequireUniqueEmail = true;
+        options.SignIn.RequireConfirmedAccount = true;
+      })
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
+
+      services.AddAuthentication(config =>
+        {
+          config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+          config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+          ValidateIssuer = true,
+          ValidateAudience = true,
+          ValidIssuer = Configuration["jwt:issuer"],
+          ValidAudience = Configuration["jwt:audience"],
+
+          ValidateLifetime = true,
+
+          ValidateIssuerSigningKey = true,
+          IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(Configuration["jwt:key"])),
+          ClockSkew = TimeSpan.Zero
+        });
+
       services.AddScoped<App>();
+
+
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,14 +103,15 @@ namespace GreatFriends.SmartHoltel.APIS
         app.UseSwagger();
         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GreatFriends.SmartHoltel.APIS v1"));
       }
-       
-      // db.Database.EnsureCreated();
 
       app.UseHttpsRedirection();
 
       app.UseRouting();
 
+      app.UseAuthentication();
       app.UseAuthorization();
+
+      app.UseAuth();
 
       app.UseEndpoints(endpoints =>
       {

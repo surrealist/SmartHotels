@@ -12,28 +12,16 @@ namespace GreatFriends.SmartHoltel.Services.Data
 
   public class AppDb : DbContext
   {
-
-    //public AppDb()
-    //{
-    //  //
-    //}
-
     public AppDb(DbContextOptions<AppDb> options) : base(options)
     {
       //
     }
 
+    public DbSet<User> Users { get; set; }
+
     public DbSet<Room> Rooms { get; set; }
     public DbSet<RoomType> RoomTypes { get; set; }
     public DbSet<Reservation> Reservations { get; set; }
-
-    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //{
-    //  if (!optionsBuilder.IsConfigured)
-    //  {
-    //    optionsBuilder.UseSqlServer("Data Source=(local)\\sqlexpress;Initial Catalog=SmartHotel_Thitipong;Integrated Security=True;multipleactiveresultsets=true");
-    //  }
-    //}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
