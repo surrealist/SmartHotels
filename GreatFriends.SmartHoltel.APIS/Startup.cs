@@ -40,7 +40,9 @@ namespace GreatFriends.SmartHoltel.APIS
       services.AddControllers();
       services.AddSwaggerGen(c =>
       {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "GreatFriends.SmartHoltel.APIS", Version = "v1" });
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "GreatFriends.SmartHotels.APIs", Version = "v1" });
+        c.SwaggerDoc("v2", new OpenApiInfo { Title = "GreatFriends.SmartHotels.APIs", Version = "v2" });
+        c.CustomSchemaIds(x => x.FullName);
       });
 
       services.AddDbContext<AppDb>(options =>
@@ -101,17 +103,21 @@ namespace GreatFriends.SmartHoltel.APIS
       {
         app.UseDeveloperExceptionPage();
         app.UseSwagger();
-        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GreatFriends.SmartHoltel.APIS v1"));
+        app.UseSwaggerUI(c =>
+        {
+          c.SwaggerEndpoint("/swagger/v1/swagger.json", "GreatFriends.SmartHotels.APIs v1");
+          c.SwaggerEndpoint("/swagger/v2/swagger.json", "GreatFriends.SmartHotels.APIs v2");
+        });
       }
 
+      app.UseAppExceptionHandler(); // *
+
       app.UseHttpsRedirection();
-
       app.UseRouting();
-
       app.UseAuthentication();
       app.UseAuthorization();
 
-      app.UseAuth();
+      app.UseAuth(); // *
 
       app.UseEndpoints(endpoints =>
       {

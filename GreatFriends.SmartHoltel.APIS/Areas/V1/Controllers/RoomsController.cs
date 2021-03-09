@@ -9,10 +9,13 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
 {
-  [Route("api/V1/[controller]")]
+  [Area("v1")]
+  [ApiExplorerSettings(GroupName = "v1")]
+  [Route("api/v1/[controller]")]
   [Produces("application/json")]
   [ApiController]
   public class RoomsController : ControllerBase
@@ -21,11 +24,11 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
 
     public RoomsController(App app)
     {
-      this.app = app; 
+      this.app = app;
     }
-    
+
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<RoomResponse>>> GetAllAsync([FromHeader(Name = "X-RoomType")] string roomType = "")
+    public async Task<ActionResult<IEnumerable<RoomResponse>>> GetAllAsync([FromHeader(Name = "X-RoomType")] string roomType = "", int page = 1)
     {
       var q = app.Rooms.All().Include(r => r.RoomType)
                 .OrderBy(x => x.Id)
@@ -36,9 +39,12 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Controllers
         q = q.Where(x => x.RoomTypeCode == roomType);
       }
 
-      var items = await q.ToListAsync();
+      var items = await q.ToPagedListAsync(page, 10); // q.ToListAsync();
+      HttpContext.Response.Headers.Add("X-Total-Pages", items.PageCount.ToString());
+      HttpContext.Response.Headers.Add("X-Page", items.PageNumber.ToString());
+      HttpContext.Response.Headers.Add("X-Page-Size", items.PageSize.ToString());
 
-      var output = items.ConvertAll(RoomResponse.FromModel);
+      var output = items.ToList().ConvertAll(RoomResponse.FromModel);
 
       return output;
     }

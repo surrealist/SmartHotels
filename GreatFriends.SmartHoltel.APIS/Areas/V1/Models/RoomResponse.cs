@@ -14,13 +14,16 @@ namespace GreatFriends.SmartHoltel.APIS.Areas.V1.Models
     public RoomTypeResponse RoomType { get; set; }
 
     public static RoomResponse FromModel(Room m)
-      => new RoomResponse()
+    {
+      if (m == null) return null;
+
+      return new RoomResponse()
       {
         Id = m.Id,
         AreaSquareMeters = m.AreaSquareMeters,
         FloorNo = m.FloorNo,
         RoomType = RoomTypeResponse.FromModel(m.RoomType)
       };
-
+    }
   }
 }

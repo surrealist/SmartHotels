@@ -1,0 +1,182 @@
+{
+	"info": {
+		"_postman_id": "86dbc4b1-c251-46b2-995e-048652fb8e75",
+		"name": "SmartHotels",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Basic",
+			"item": [
+				{
+					"name": "Get Room No. 501",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('ok', function() { \r",
+									"    pm.response.to.have.status(200);\r",
+									"    \r",
+									"    let res = pm.response.json();\r",
+									"    pm.expect(res.id).to.eql(501);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoic3V0aGVwQGNlbnRyYWwudGVjaCIsInJhbmRvbU51bWJlciI6IjIzIiwiZXhwIjoxNjE1ODYyOTA5LCJpc3MiOiJhcGkuZ2Zob3RlbHMuY29tIiwiYXVkIjoiZ2Zob3RlbHMuY29tIn0.1e6iL3SoM2SMUpKU5Y_yNhFNI3BWweO3XucVX5ozNc4",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:44304/api/v1/rooms/501",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44304",
+							"path": [
+								"api",
+								"v1",
+								"rooms",
+								"501"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "https://localhost:44358/api/v1/auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('status', function() { \r",
+							"    pm.response.to.have.status(500);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"suthep@central.tech\",\r\n    \"password\": \"Test555/*\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44358/api/v1/auth",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44358",
+					"path": [
+						"api",
+						"v1",
+						"auth"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "https://localhost:44358/api/v1/auth",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"suthep@central.tech\",\r\n    \"password\": \"Test555/*\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44358/api/v1/auth",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44358",
+							"path": [
+								"api",
+								"v1",
+								"auth"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Cache-Control",
+							"value": "no-cache,no-store"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Expires",
+							"value": "Thu, 01 Jan 1970 00:00:00 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "Microsoft-IIS/10.0"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": ".AspNetCore.Identity.Application=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; secure; samesite=lax; httponly"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "Identity.External=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; secure; samesite=lax; httponly"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "Identity.TwoFactorUserId=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; secure; samesite=lax; httponly"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "ASP.NET"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 06 Mar 2021 04:46:59 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoic3V0aGVwQGNlbnRyYWwudGVjaCIsInJhbmRvbU51bWJlciI6Ijc2IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIm9mZmljZXIiLCJ1c2VyIl0sImV4cCI6MTYxNTg3MDAxOCwiaXNzIjoiYXBpLmdmaG90ZWxzLmNvbSIsImF1ZCI6ImdmaG90ZWxzLmNvbSJ9.79yJmpgtsRh5egmSDPudu6jODBQC7x0YCQE8DgBgcVk\"\n}"
+				}
+			]
+		}
+	]
+}
