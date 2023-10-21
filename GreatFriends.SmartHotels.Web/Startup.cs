@@ -1,13 +1,16 @@
 using GreatFriends.SmartHotels.Web.Data;
+using GreatFriends.SmartHotels.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,8 +33,11 @@ namespace GreatFriends.SmartHotels.Web
       services.AddDatabaseDeveloperPageExceptionFilter();
 
       services.AddDbContext<ApplicationDbContext>(options =>
-          options.UseSqlServer(
-              Configuration.GetConnectionString("DefaultConnection")));
+          options.UseSqlite(
+              Configuration.GetConnectionString("DefaultConnection"))
+          //options.UseSqlServer(
+          //    Configuration.GetConnectionString("DefaultConnection"))
+      );
        
       services.AddIdentity<IdentityUser, IdentityRole>(options =>
         {
@@ -42,11 +48,12 @@ namespace GreatFriends.SmartHotels.Web
           options.Password.RequireUppercase = false;
 
           options.User.RequireUniqueEmail = true;
-          options.SignIn.RequireConfirmedAccount = true;
+          options.SignIn.RequireConfirmedAccount = false;
         })
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
 
+      services.AddScoped<IEmailSender, EmailService>();
 
       services.AddControllersWithViews();
       services.AddRazorPages();

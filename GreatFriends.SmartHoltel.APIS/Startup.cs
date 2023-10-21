@@ -45,14 +45,19 @@ namespace GreatFriends.SmartHoltel.APIS
 
       services.AddDbContext<AppDb>(options =>
       {
-        options.UseSqlServer(Configuration.GetConnectionString(nameof(AppDb)))
-              .UseLazyLoadingProxies();
+        //options.UseSqlServer(Configuration.GetConnectionString(nameof(AppDb)))
+        //      .UseLazyLoadingProxies();
+        options.UseSqlite(Configuration.GetConnectionString("AppDb"))
+          .UseLazyLoadingProxies();
       });
 
       // Identity Core
       services.AddDbContext<ApplicationDbContext>(options =>
-          options.UseSqlServer(
-              Configuration.GetConnectionString("DefaultConnection")));
+          //options.UseSqlServer(
+          //    Configuration.GetConnectionString("DefaultConnection"))
+          options.UseSqlite(
+                Configuration.GetConnectionString("DefaultConnection"))
+      );
 
       services.AddIdentity<IdentityUser, IdentityRole>(options =>
       {

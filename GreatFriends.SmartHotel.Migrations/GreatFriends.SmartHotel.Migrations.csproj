@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <AssemblyName>GreatFriends.SmartHotel.Migrations</AssemblyName>
     <RootNamespace>GreatFriends.SmartHotel.Migrations</RootNamespace>
   </PropertyGroup>
@@ -32,13 +32,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.12" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.12" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\GreatFriends.SmartHoltel.Services\GreatFriends.SmartHoltel.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

@@ -1,12 +1,8 @@
 ﻿using GreatFriends.SmartHoltel.Services.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration; 
+
 
 namespace GreatFriends.SmartHotel.Migrations
 {
@@ -19,7 +15,8 @@ namespace GreatFriends.SmartHotel.Migrations
                    .Build();
 
       var options = new DbContextOptionsBuilder<AppDb>() 
-                    .UseSqlServer(config.GetConnectionString(nameof(AppDb)), 
+                    //.UseSqlServer(config.GetConnectionString(nameof(AppDb)), 
+                    .UseSqlite(config.GetConnectionString(nameof(AppDb)),
                       x => x.MigrationsAssembly("GreatFriends.SmartHotel.Migrations")) 
                     .Options;
 
